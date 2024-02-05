@@ -12,21 +12,11 @@ module Spree::VariantDecorator
   def join_volume_prices(user = nil)
     table = Spree::VolumePrice.arel_table
 
-    if user
-      Spree::VolumePrice.where(
-        (table[:variant_id].eq(id)
-          .or(table[:volume_price_model_id].in(volume_price_models.ids)))
-          .and(table[:role_id].eq(user.resolve_role.try(:id)))
-        )
-        .order(position: :asc)
-    else
-      Spree::VolumePrice.where(
-        (table[:variant_id]
-          .eq(id)
-          .or(table[:volume_price_model_id].in(volume_price_models.ids)))
-          .and(table[:role_id].eq(nil))
-        ).order(position: :asc)
-    end
+    Spree::VolumePrice.where(
+      (table[:variant_id]
+        .eq(id)
+        .or(table[:volume_price_model_id].in(volume_price_models.ids)))
+      ).order(position: :asc)
   end
 
   # calculates the price based on quantity
